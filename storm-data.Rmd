@@ -1,5 +1,5 @@
 ---
-title: "Analysis of Historical Storm Data Impact on Economic and Population Health"
+title: "Analysis of Economic and Population Health Impact of Historical Storm Events"
 subtitle: "Tornados, Hurricanes and Typhoons, Oh My!"
 author: "S. Crain"
 date: "11/24/2017"
