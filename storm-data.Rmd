@@ -1,11 +1,12 @@
 ---
-title: "Untitled"
+title: "Tornados, Hurricanes and Typhoons, Oh My!"
+subtitle: "Storms with Extremely High Winds Cause the Most Economic and Health Impact in the U.S."
 author: "Shawn Crain"
-date: "11/18/2017"
+date: "11/24/2017"
 output: 
   html_document:
     fig_width: 10
-    fig_height: 9
+    fig_height: 8
 ---
 
 ```{r setup, include=FALSE}
@@ -18,6 +19,14 @@ require(reshape2, quietly = TRUE)
 
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
+
+## Synopsis
+
+U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database begain tracking a standard
+set of 48 storm data events in 1996.  After analyzing storm data events from 1996 to 2011 it was found
+that Hurricanes/Typhoons cause the most economic impact in relation to crop and property damage, while
+Tornados take the most population toll in regards to injuries and fatalities.
+
 ## Table of Contents
 
 * [Data Processing](#data-processing)  
@@ -56,13 +65,7 @@ stopifnot(dim(storm_data) == c(902297,37))
 ### Cleaning and Preparation
 After the dataset is loaded, it is cleaned as follows:
 
-1. A `BeginDate` variable is added by applying `as.Date` to the `BGN_DATE` variable.  
-
-```{r setBeginDate, cache=TRUE}
-storm_data$BeginDate   <- as.Date(storm_data$BGN_DATE, '%m/%d/%Y')
-```
-
-2. Given the poor quality of the property and crop damage exponent variables (`PROPDMGEXP` and `CROPDMGEXP`), two variables are added to hold converted multiplier values named `PropDamageMult` and `CropDamageMult`.  Again from advice found in the previously mentioned forum post, an approach is used based on the analysis found in the article ["How To Handle Exponent Value of PROPDMGEXP and CROPDMGEXP"](https://rstudio-pubs-static.s3.amazonaws.com/58957_37b6723ee52b455990e149edde45e5b6.html). Using this information, the function `convertExponentToMultiplier` is used to convert the original exponent variables into the corresponding multipliers. See 
+1. Given the poor quality of the property and crop damage exponent variables (`PROPDMGEXP` and `CROPDMGEXP`), two variables are added to hold converted multiplier values named `PropDamageMult` and `CropDamageMult`.  Again from advice found in the previously mentioned forum post, an approach is used based on the analysis found in the article ["How To Handle Exponent Value of PROPDMGEXP and CROPDMGEXP"](https://rstudio-pubs-static.s3.amazonaws.com/58957_37b6723ee52b455990e149edde45e5b6.html). Using this information, the function `convertExponentToMultiplier` is used to convert the original exponent variables into the corresponding multipliers. See 
 [appendix A](#appendix-a---exponent-to-multiplier-conversion-result) for the result of this exponent to multiplier conversion.
 
 ```{r setMultipliers, cache=TRUE}
@@ -92,7 +95,7 @@ storm_data$PropDamageMult <- convertExponentToMultiplier(storm_data$PROPDMGEXP)
 storm_data$CropDamageMult <- convertExponentToMultiplier(storm_data$CROPDMGEXP)
 ```
 
-3. With the mulitplier variables created, `CropDamage` and `PropDamage` variables are added by multiplying them against the corresponding damage variables `PROPDMG` and `CROPDMG`.  In addition, a `TotalDamage` variable is  also added, using the sum of both the crop and property damage.
+2. With the mulitplier variables created, `CropDamage` and `PropDamage` variables are added by multiplying them against the corresponding damage variables `PROPDMG` and `CROPDMG`.  In addition, a `TotalDamage` variable is  also added, using the sum of both the crop and property damage.
 
 ```{r calculateDamage, cache=TRUE}
 storm_data$PropDamage  <- storm_data$PROPDMG * storm_data$PropDamageMult
@@ -100,21 +103,22 @@ storm_data$CropDamage  <- storm_data$CROPDMG * storm_data$CropDamageMult
 storm_data$TotalDamage <- storm_data$PropDamage + storm_data$CropDamage
 ```
 
-4. For determining the oveall health impact of events, a `PopulationHealthImpact` variable is added using the
+3. For determining the oveall health impact of events, a `PopulationHealthImpact` variable is added using the
 sum of `FATALITIES` and `INJURIES` variables.
 
 ```{r calculateHealthImpact, cache=TRUE}
 storm_data$PopulationHealthImpact <- storm_data$FATALITIES + storm_data$INJURIES
 ```
 
-5. To make the dataset easier to work with, irrelevant observations are removed.  According to the documentation, it was not until 1996 that all event types were being recorded.  For that reason, the years from the dataset earlier than that are removed in order to get a fair assessment of all events. Also, since we are answering questions around economic and population health impact, all rows having neither of these are removed as well.  
+4. To make the dataset easier to work with, irrelevant observations are removed.  According to the documentation, it was not until 1996 that all event types were being recorded.  For that reason, the years from the dataset earlier than that are removed in order to get a fair assessment of all events. Also, since we are answering questions around economic and population health impact, all rows having neither of these are removed as well.  
 
 ```{r trimDataSet, cache=TRUE}
+storm_data$BeginDate   <- as.Date(storm_data$BGN_DATE, '%m/%d/%Y')
 sd <- storm_data[storm_data$BeginDate >= '1996-01-01',]
 sd <- sd[sd$TotalDamage > 0 | sd$PopulationHealthImpact  > 0,]
 ```
 
-6. Looking at the top events with the most `TotalDamage` and `PopulationHealthImpact` showed that there was a least one
+5. Looking at the top events with the most `TotalDamage` and `PopulationHealthImpact` showed that there was a least one
 event that had far more economic impact than any other.  Using the [NOAA Storm Events Database](https://www.ncdc.noaa.gov/stormevents/choosedates.jsp?statefips=-999%2CALL), it was found that a [2006 flood in Napa County, Califorina](https://www.ncdc.noaa.gov/stormevents/listevents.jsp?eventType=%28Z%29+Flood&beginDate_mm=01&beginDate_dd=01&beginDate_yyyy=2006&endDate_mm=01&endDate_dd=01&endDate_yyyy=2006&county=NAPA%3A55&hailfilter=0.00&tornfilter=0&windfilter=000&sort=DT&submitbutton=Search&statefips=6%2CCALIFORNIA) was mis-entered with a `PROPDMGEXP` of **B**illion instead of **M**illion. 
 
 The erroneous `PROPDMGEXP` value was then corrected and the `PropDamageMult`, `PropDamage` and `TotalDamage` variables were recalculated.
@@ -127,23 +131,10 @@ sd$PropDamage  <- sd$PROPDMG * sd$PropDamageMult
 sd$TotalDamage <- sd$PropDamage + sd$CropDamage
 ```
 
-```{r echo=FALSE}
-kable(
-  head(
-    sd[order(-sd$TotalDamage), 
-              c('REFNUM', 'STATE', 'BeginDate', 'EVTYPE', 'CROPDMG', 
-                'CROPDMGEXP', 'PROPDMG', 'PROPDMGEXP', 'TotalDamage')],
-    n =5
-    ), 
-  row.names = FALSE,
-  caption = 'Top Five Events by Total Economic Damage (after fixing REFNUM 605943)'
-)
-```
-
 After checking the remaining top 5 by damage and health impact, it was found those are consistent with data available in the NOAA database.
 See [appendix B](#appendix-b---review-of-top-individual-events-during-data-preparation) for more information on the checks of the top individual events.
 
-7. Given the poor consistency of the values found in the `EVTYPE` variable, it was decided to use the list of Event names from Section 2.1.1 
+6. Given the poor consistency of the values found in the `EVTYPE` variable, it was decided to use the list of Event names from Section 2.1.1 
 of the [Storm Data Documentation](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2Fpd01016005curr.pdf).  Using various techniques, a
 new tidy variable named `EventType` was created containing one of these 48 event types or the value `UNCATEGORIZED` indicating the event was
 not included.  All observations start off as `UNCATEGORIZED` and then updated with different approaches with one of the 48 values.
