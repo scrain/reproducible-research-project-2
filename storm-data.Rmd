@@ -1,7 +1,7 @@
 ---
-title: "Tornados, Hurricanes and Typhoons, Oh My!"
-subtitle: "Storms with Extremely High Winds Cause the Most Economic and Health Impact in the U.S."
-author: "Shawn Crain"
+title: "Analysis of Historical Storm Data Impact on Economic and Population Health"
+subtitle: "Tornados, Hurricanes and Typhoons, Oh My!"
+author: "S. Crain"
 date: "11/24/2017"
 output: 
   html_document:
@@ -505,3 +505,4 @@ kable(
   row.names = FALSE
 )
 ```
+
