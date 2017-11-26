@@ -1,7 +1,7 @@
 ---
 title: "Analysis of Economic and Population Health Impact of Historical Storm Events"
 subtitle: "Tornados, Hurricanes and Typhoons, Oh My!"
-author: "S. Crain"
+author: "Shawn Crain"
 date: "11/24/2017"
 output: 
   html_document:
@@ -19,6 +19,8 @@ require(reshape2, quietly = TRUE)
 
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
+
+[github repository](https://github.com/scrain/reproducible-research-project-2)
 
 ## Synopsis
 
