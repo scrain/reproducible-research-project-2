@@ -1,6 +1,6 @@
 ---
 title: "Analysis of Economic and Population Health Impact of Historical Storm Events"
-subtitle: "Tornados, Hurricanes and Typhoons, Oh My!"
+subtitle: "Tornadoes, Hurricanes and Typhoons, Oh My!"
 author: "Shawn Crain"
 date: "11/24/2017"
 output: 
@@ -24,10 +24,10 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 
 ## Synopsis
 
-U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database begain tracking a standard
+U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database began tracking a standard
 set of 48 storm data events in 1996.  After analyzing storm data events from 1996 to 2011 it was found
 that Hurricanes/Typhoons cause the most economic impact in relation to crop and property damage, while
-Tornados take the most population toll in regards to injuries and fatalities.
+Tornadoes take the most population toll in regards to injuries and fatalities.
 
 ## Table of Contents
 
@@ -98,7 +98,7 @@ storm_data$PropDamageMult <- convertExponentToMultiplier(storm_data$PROPDMGEXP)
 storm_data$CropDamageMult <- convertExponentToMultiplier(storm_data$CROPDMGEXP)
 ```
 
-2. With the mulitplier variables created, `CropDamage` and `PropDamage` variables are added by multiplying them against the corresponding damage variables `PROPDMG` and `CROPDMG`.  In addition, a `TotalDamage` variable is  also added, using the sum of both the crop and property damage.
+2. With the multiplier variables created, `CropDamage` and `PropDamage` variables are added by multiplying them against the corresponding damage variables `PROPDMG` and `CROPDMG`.  In addition, a `TotalDamage` variable is  also added, using the sum of both the crop and property damage.
 
 ```{r calculateDamage, cache = TRUE}
 storm_data$PropDamage  <- storm_data$PROPDMG * storm_data$PropDamageMult
@@ -106,7 +106,7 @@ storm_data$CropDamage  <- storm_data$CROPDMG * storm_data$CropDamageMult
 storm_data$TotalDamage <- storm_data$PropDamage + storm_data$CropDamage
 ```
 
-3. For determining the oveall health impact of events, a `PopulationHealthImpact` variable is added using the
+3. For determining the overall health impact of events, a `PopulationHealthImpact` variable is added using the
 sum of `FATALITIES` and `INJURIES` variables.
 
 ```{r calculateHealthImpact, cache = TRUE}
@@ -289,7 +289,7 @@ kable(
 )
 ```
 
-Tornado events top the list here, with over two and half times the health impact of second place, which is Excessive Heat.  Excessive Heat is worth noting however due to the fact that even though it is far behind tornados in total health impact, but has the most fatalities overall.
+Tornado events top the list here, with over two and half times the health impact of second place, which is Excessive Heat.  Excessive Heat is worth noting however due to the fact that even though it is far behind tornadoes in total health impact, but has the most fatalities overall.
 
 Next we will look a bit deeper at the data, plotting the yearly total health impact for these top 5.
 
@@ -319,7 +319,7 @@ ggplot(health_by_type_and_year, aes(x=Year, y=PopulationHealthImpact, colour = E
 
 Here we see two years with significant outliers.  In 1998 there was an extremely high health related impact due to flood events.  Looking at the [NOAA Summary of Natural Hazard Statistics for 1998 ](http://www.nws.noaa.gov/om/hazstats/sum98.pdf) shows that a flood in south-central Texas caused over 6,000 injuries accounting for most of that year's total.  The Tornado spike in 2011 can be accounted for due to record breaking spring and summer tornado season according to the [NOAA Tornado Annual 2011 Report](https://www.ncdc.noaa.gov/sotc/tornadoes/201113).
 
-Looking at the plot, Tornados have a solid yearly trend despite the record breaking year, so their number one position is not due to that year alone.  Flood events however have an overall low yearly trend in comparison to the other top 5 except for 1998.  Without this year, flood events would have been in last place instead of third amongst the current top 5.  Additional analysis would be needed, but there is good chance it would not have even made the top 5 at all without the 1998 Texas floods.
+Looking at the plot, Tornadoes have a solid yearly trend despite the record breaking year, so their number one position is not due to that year alone.  Flood events however have an overall low yearly trend in comparison to the other top 5 except for 1998.  Without this year, flood events would have been in last place instead of third amongst the current top 5.  Additional analysis would be needed, but there is good chance it would not have even made the top 5 at all without the 1998 Texas floods.
 
 ### Event Types with Greatest Economic Consequences
 
@@ -497,7 +497,7 @@ Here is the list of `EVTYPE` values not translated and left with an `EventType` 
 Also included are the sum of the calculated `TotalDamage` and `PopulationHealthImpact` totals.  These were 
 omitted due to a proper `EventType` value not being obvious.  These include values like `OTHER` with no 
 obvious match as well as `GUSTY WIND/HVY RAIN` which matches potentially to more than one `EventType`.
-Given the realitively low amountof damage and health impact values for these remaining types, omitting 
+Given the relatively low amount of damage and health impact values for these remaining types, omitting 
 them would have no impact to the overall result of the analysis.
 
 ```{r uncategorizedEVTYPES, cache = TRUE}
