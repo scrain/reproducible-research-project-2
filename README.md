@@ -2,4 +2,4 @@
 
 Final project for course Reproducible Research by Johns Hopkins University on Coursera.
 
-[Published report on RPubs](http://rpubs.com/scrain/333671)
+[Published report on RPubs](https://rpubs.com/scrain/675778)
